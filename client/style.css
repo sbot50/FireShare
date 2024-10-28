@@ -1,0 +1,129 @@
+@font-face {
+  font-family: Inter;
+  src: url(./fonts/Inter/Inter.ttf);
+}
+
+* {
+  font-family: Inter;
+}
+
+#body {
+  margin: 10px;
+  height: calc(100vh - 20px);
+  width: calc(100vw - 20px);
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+
+  &.verticle {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &#body {
+    justify-content: space-between;
+  }
+}
+
+.gridContainer {
+  display: grid;
+  align-items: center;
+  justify-content: center;
+  grid-template-columns: 1fr 1fr;
+
+  &#controlCont {
+    grid-template-columns: 1.25fr 0.75fr;
+  }
+}
+
+#title {
+  margin: 0;
+  padding: 0;
+}
+
+#nickname {
+  font-size: 20px;
+  border: none;
+  border-bottom: black 1px solid;
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.imageButton {
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+
+  > img {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+#controls {
+  display: grid;
+  grid-template-areas:
+    ". a0 ."
+    "a1 a2 a3"
+    "a4 a5 a6";
+  height: calc(100% - 40px);
+  gap: 20px;
+}
+
+#controllerContainer {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.padded {
+  padding: 10px;
+}
+
+.controlsContainer {
+  display: grid;
+  width: 100%;
+  text-align: left;
+  gap: 2px 20px;
+}
+
+.inputLabel {
+  font-size: 20px;
+  align-content: center;
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.fullHeight {
+  height: 100%;
+}
+
+.center {
+  align-items: center;
+}
+
+.pressed {
+  fill: rgb(0, 255, 0) !important;
+}
+
+#connect {
+  width: calc(100% - 20px);
+}
+
+#remoteVideo {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+}
