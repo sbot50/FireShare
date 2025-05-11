@@ -3,6 +3,12 @@ import configs from "./configs.js";
 let inputs;
 let categories;
 let target;
+let oldX;
+let oldY;
+let locked = false;
+
+const keys = {};
+const mouse = {};
 
 export default {
   init,
@@ -10,7 +16,8 @@ export default {
   getKeyName,
   checkInputs,
   update,
-  getInputs
+  getInputs,
+  getAllInputStates
 };
 
 async function init(config) {
@@ -55,12 +62,17 @@ async function init(config) {
 
   document.addEventListener("keydown", keyDown);
   document.addEventListener("keyup", keyUp);
+  document.addEventListener("mousemove", mouseMove)
+  document.addEventListener("pointerlockchange", () => locked = document.pointerLockElement != null);
 }
+
 
 function getKeyName(key) {
   if (key == null) return "Unbound";
   if (key.startsWith("key_"))
     return key.replace("key_", "").toUpperCase() + " Key";
+  if (key.startsWith("mouse_"))
+    return "Mouse " + key.replace("mouse_", "").toUpperCase();
   if (inputs[key]) return inputs[key].name;
   return key;
 }
@@ -95,14 +107,16 @@ function clickButton(event) {
   }
   target = event.target;
   target.textContent = "...";
+  oldX = mouse["mouse_x"];
+  oldY = mouse["mouse_y"];
 }
 
 function keyDown(event) {
+  keys["key_" + event.code.replace("Key", "")] = 1;
   for (const key in inputs) {
     const localKey = localStorage.getItem(key);
     if (localKey == "key_" + event.code.replace("Key", "")) {
       inputs[key].value = 1;
-      break;
     }
   }
   if (target != null) {
@@ -120,11 +134,42 @@ function keyDown(event) {
 }
 
 function keyUp(event) {
+  keys["key_" + event.code.replace("Key", "")] = 0;
   for (const key in inputs) {
     const localKey = localStorage.getItem(key);
     if (localKey == "key_" + event.code.replace("Key", "")) {
       inputs[key].value = 0;
-      break;
+    }
+  }
+}
+
+function mouseMove(event) {
+  if (!locked) {
+    mouse["mouse_x"] = (event.clientX - window.innerWidth/2)/(window.innerWidth/2);
+    mouse["mouse_y"] = (event.clientY - window.innerHeight/2)/(window.innerHeight/2);
+  } else {
+    mouse["mouse_x"] = (event.layerX - document.querySelector("#remoteVideo").clientWidth/2)/(document.querySelector("#remoteVideo").clientWidth/2);
+    mouse["mouse_y"] = (event.layerY - document.querySelector("#remoteVideo").clientHeight/2)/(document.querySelector("#remoteVideo").clientHeight/2);
+  }
+  for (const key in inputs) {
+    const localKey = localStorage.getItem(key);
+    if (localKey == "mouse_x") {
+      inputs[key].value = mouse["mouse_x"];
+    }
+    if (localKey == "mouse_y") {
+      inputs[key].value = mouse["mouse_y"];
+    }
+  }
+  if (target != null) {
+    if (Math.abs(Math.abs(oldX) - Math.abs(mouse["mouse_x"])) > 0.2) {
+      configs.saveKey(target.dataset.key, "mouse_x");
+      target.textContent = "Mouse X"
+      target = null;
+    }
+    else if (Math.abs(Math.abs(oldY) - Math.abs(mouse["mouse_y"])) > 0.2) {
+      configs.saveKey(target.dataset.key, "mouse_y");
+      target.textContent = "Mouse Y"
+      target = null;
     }
   }
 }
@@ -138,7 +183,6 @@ function checkInputs() {
       const localKey = localStorage.getItem(key);
       if (localKey == "btn_" + i) {
         inputs[key].value = buttons[i];
-        break;
       }
     }
     if (target && buttons[i] == 1) {
@@ -151,11 +195,11 @@ function checkInputs() {
   }
   let axes = gamepad.axes;
   for (let i = 0; i < axes.length; i++) {
+    if (i == 4) break;
     for (const key in inputs) {
       const localKey = localStorage.getItem(key);
       if (localKey == "axis_" + i) {
         inputs[key].value = axes[i];
-        break;
       }
     }
     if (target && (axes[i] >= 0.9 || axes[i] <= -0.9)) {
@@ -187,4 +231,35 @@ function update() {
 
 function getInputs() {
   return inputs;
+}
+
+function getAllInputStates() {
+  const returnInputs = {};
+  const gamepad = navigator.getGamepads()[0];
+
+  if (gamepad) {
+    gamepad.buttons.forEach((button, index) => {
+      returnInputs[`btn_${index}`] = button.value;
+    });
+
+    gamepad.axes.forEach((axis, index) => {
+      returnInputs[`axis_${index}`] = axis;
+    });
+  }
+
+  const allStates = { ...keys, ...mouse, ...returnInputs };
+
+  Object.keys(allStates).forEach(key => {
+    if (document.querySelector("#state_" + key) == null) {
+      const element = document.createElement("p");
+      element.classList.add("key");
+      element.innerText = key;
+      element.id = "state_" + key;
+      if (key.startsWith("key_")) document.querySelector(".keyboard").appendChild(element);
+      else if (key.startsWith("mouse_")) document.querySelector(".mouse").appendChild(element);
+      else document.querySelector(".controller").appendChild(element);
+    }
+    document.querySelector("#state_" + key).style.backgroundColor = (allStates[key] == 0) ? "white" : (allStates[key] > 0) ? "rgba(0,255,0," + Math.abs(allStates[key]) + ")" : "rgba(255,0,0," + Math.abs(allStates[key]) + ")";
+  });
+  return allStates;
 }

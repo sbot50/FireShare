@@ -11,6 +11,7 @@ function setInputs(inputList) {
 
 function connect() {
   document.querySelector("#body").style.display = "none";
+  document.querySelector(".sidebar").style.display = "none";
   const nickname = document.querySelector("#nickname").value;
   localStorage.setItem("nickname", nickname);
 
@@ -46,6 +47,7 @@ function connect() {
     call.on("stream", (stream) => vid.srcObject = stream);
     call.answer();
   });
+  document.querySelector("#remoteVideo").requestPointerLock();
 }
 
 function sendInputs(remote) {

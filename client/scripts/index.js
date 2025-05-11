@@ -20,8 +20,11 @@ async function ready() {
   document.querySelector("#rename").onclick = rename;
   document.querySelector("#delete").onclick = deleteConfig;
   document.querySelector("#connect").onclick = connect.connect;
+  document.querySelector(".sidebar > img").onclick = () => document.querySelector(".sidebar").classList.toggle("open");
+  document.querySelector("#remoteVideo").onclick = () => document.querySelector("#remoteVideo").requestPointerLock();
 
   setInterval(() => {
+    inputView.getAllInputStates();
     inputView.checkInputs();
     inputView.update();
     connect.setInputs(inputView.getInputs());
