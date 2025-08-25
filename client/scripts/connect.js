@@ -4,6 +4,7 @@ export default {
 }
 
 let inputs;
+let olddata;
 
 function setInputs(inputList) {
     inputs = inputList;
@@ -52,16 +53,32 @@ function connect() {
 
 function sendInputs(remote) {
     const data = {
-        buttons: [],
-        axes: [],
+        buttons: {},
+        axes: {},
     }
 
     for (const key in inputs) {
-        if (key.startsWith("btn_")) data.buttons.push(inputs[key].value);
-        if (key.startsWith("axis_")) data.axes.push(inputs[key].value);
+        if (key.startsWith("btn_")) {
+            if (olddata == null || inputs[key].value !== olddata.buttons[inputs[key].name.toLowerCase()]) data.buttons[inputs[key].name.toLowerCase()] = inputs[key].value;
+        }
+        if (key.startsWith("axis_")) {
+            if (olddata == null || inputs[key].value !== olddata.axes[inputs[key].name.toLowerCase()]) {
+                if (inputs[key].value > 0.1 || inputs[key].value < -0.1) data.axes[inputs[key].name.toLowerCase()] = inputs[key].value;
+                if (olddata != null && olddata.axes[inputs[key].name.toLowerCase()] !== 0 && (inputs[key].value < 0.1 && inputs[key].value > -0.1)) data.axes[inputs[key].name.toLowerCase()] = 0;
+            }
+        }
     }
 
-    remote.send(data);
+    if (Object.keys(data.buttons).length !== 0 || Object.keys(data.axes).length !== 0) {
+        remote.send(data);
+        console.log(inputs);
+    }
+    if (olddata == null) olddata = data;
+    for (const key in data.buttons) {
+        olddata.buttons[key] = data.buttons[key];
+    }
+    for (const key in data.axes) {
+        olddata.axes[key] = data.axes[key];
+    }
 }
-
 
