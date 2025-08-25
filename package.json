@@ -1,0 +1,15 @@
+{
+  "name": "fireshare",
+  "version": "1.0.0",
+  "main": "index.mjs",
+  "repository": {
+    "type": "git",
+    "url": "https://forgejo.tail12316.ts.net/username/FireShare.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}

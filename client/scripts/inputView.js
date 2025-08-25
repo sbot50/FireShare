@@ -79,7 +79,7 @@ function getKeyName(key) {
 
 function loadConfig(config) {
   const inputButtons = document.querySelectorAll(".inputButton");
-  const disable = document.querySelector("#config").value == "Default";
+  const disable = document.querySelector("#config").value === "Default";
   for (const inputButton of inputButtons) {
     inputButton.disabled = disable;
     const key = inputButton.dataset.key;
@@ -93,7 +93,7 @@ function loadConfig(config) {
 }
 
 function clickButton(event) {
-  if (target == event.target) {
+  if (target === event.target) {
     configs.saveKey(target.dataset.key, null);
     target.textContent = "Unbound";
     target = null;
@@ -115,12 +115,12 @@ function keyDown(event) {
   keys["key_" + event.code.replace("Key", "")] = 1;
   for (const key in inputs) {
     const localKey = localStorage.getItem(key);
-    if (localKey == "key_" + event.code.replace("Key", "")) {
+    if (localKey === "key_" + event.code.replace("Key", "")) {
       inputs[key].value = 1;
     }
   }
   if (target != null) {
-    if (event.key == "Escape") {
+    if (event.key === "Escape") {
       target.textContent = getKeyName(
         configs.getActiveConfig()[target.dataset.key]
       );
@@ -137,7 +137,7 @@ function keyUp(event) {
   keys["key_" + event.code.replace("Key", "")] = 0;
   for (const key in inputs) {
     const localKey = localStorage.getItem(key);
-    if (localKey == "key_" + event.code.replace("Key", "")) {
+    if (localKey === "key_" + event.code.replace("Key", "")) {
       inputs[key].value = 0;
     }
   }
@@ -153,10 +153,10 @@ function mouseMove(event) {
   }
   for (const key in inputs) {
     const localKey = localStorage.getItem(key);
-    if (localKey == "mouse_x") {
+    if (localKey === "mouse_x") {
       inputs[key].value = mouse["mouse_x"];
     }
-    if (localKey == "mouse_y") {
+    if (localKey === "mouse_y") {
       inputs[key].value = mouse["mouse_y"];
     }
   }
@@ -181,11 +181,18 @@ function checkInputs() {
   for (let i = 0; i < buttons.length; i++) {
     for (const key in inputs) {
       const localKey = localStorage.getItem(key);
-      if (localKey == "btn_" + i) {
-        inputs[key].value = buttons[i];
+      if (localKey === "btn_" + i) {
+        if (buttons[i] !== Math.round(buttons[i])) {
+          if (buttons[i] > 0.75) inputs[key].value = 1;
+          else inputs[key].value = 0;
+          if (i === 6) inputs["axis_4"].value = buttons[6];
+          if (i === 7) inputs["axis_5"].value = buttons[7];
+        } else {
+          inputs[key].value = buttons[i];
+        }
       }
     }
-    if (target && buttons[i] == 1) {
+    if (target && buttons[i] === 1) {
       configs.saveKey(target.dataset.key, "btn_" + i);
       target.textContent = getKeyName(
         configs.getActiveConfig()[target.dataset.key]
@@ -195,10 +202,10 @@ function checkInputs() {
   }
   let axes = gamepad.axes;
   for (let i = 0; i < axes.length; i++) {
-    if (i == 4) break;
+    if (i === 4) break;
     for (const key in inputs) {
       const localKey = localStorage.getItem(key);
-      if (localKey == "axis_" + i) {
+      if (localKey === "axis_" + i) {
         inputs[key].value = axes[i];
       }
     }
@@ -215,7 +222,7 @@ function checkInputs() {
 function update() {
   for (const key in inputs) {
     if (document.querySelector("#" + key) == null) continue;
-    if (inputs[key].value == 1)
+    if (inputs[key].value === 1)
       document.querySelector("#" + key).classList.add("pressed");
     else document.querySelector("#" + key).classList.remove("pressed");
   }
@@ -239,12 +246,19 @@ function getAllInputStates() {
 
   if (gamepad) {
     gamepad.buttons.forEach((button, index) => {
-      returnInputs[`btn_${index}`] = button.value;
+      if (button.value === Math.round(button.value)) {
+        returnInputs[`btn_${index}`] = button.value;
+      } else {
+        if (button.value > 0.75) returnInputs[`btn_${index}`] = 1;
+        else returnInputs[`btn_${index}`] = 0;
+      }
     });
 
     gamepad.axes.forEach((axis, index) => {
       returnInputs[`axis_${index}`] = axis;
     });
+    returnInputs["axis_4"] = gamepad.buttons[6].value;
+    returnInputs["axis_5"] = gamepad.buttons[7].value;
   }
 
   const allStates = { ...keys, ...mouse, ...returnInputs };
@@ -259,7 +273,7 @@ function getAllInputStates() {
       else if (key.startsWith("mouse_")) document.querySelector(".mouse").appendChild(element);
       else document.querySelector(".controller").appendChild(element);
     }
-    document.querySelector("#state_" + key).style.backgroundColor = (allStates[key] == 0) ? "white" : (allStates[key] > 0) ? "rgba(0,255,0," + Math.abs(allStates[key]) + ")" : "rgba(255,0,0," + Math.abs(allStates[key]) + ")";
+    document.querySelector("#state_" + key).style.backgroundColor = (allStates[key] === 0) ? "white" : (allStates[key] > 0) ? "rgba(0,255,0," + Math.abs(allStates[key]) + ")" : "rgba(255,0,0," + Math.abs(allStates[key]) + ")";
   });
   return allStates;
 }

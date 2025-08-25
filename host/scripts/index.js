@@ -53,17 +53,24 @@ async function share() {
           if (remoteVideo) remoteVideo.close();
         });
       }
-      if (webSocket.readyState == WebSocket.OPEN) {
+      if (webSocket.readyState === WebSocket.OPEN) {
+        if (data.nick) {
+          webSocket.send(JSON.stringify({
+            type: "Init",
+            id: id,
+            nick: data.nick,
+          }));
+        }
         if (data.buttons && data.axes) {
-          webSocket.send(JSON.stringify({ ...data, id }));
+          webSocket.send(JSON.stringify({ ...data, id, type: "Data" }));
         }
       }
       if (data.ping) remote.send(data);
     });
 
     remote.on("close", () => {
-      if (webSocket.readyState == WebSocket.OPEN) {
-        webSocket.send(JSON.stringify({ close: true, id }));
+      if (webSocket.readyState === WebSocket.OPEN) {
+        webSocket.send(JSON.stringify({ type: "Close", id }));
       }
     });
   });
@@ -101,12 +108,15 @@ function addConnection(remote, data, remoteVideo) {
 }
 
 async function downloadScript() {
-    const txt = await fetch("./res/fireshare-linux.py").then(response => response.text());
-    const blob = new Blob([txt], { type: "application/py" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "fireshare-linux.py";
-    link.click();
-    URL.revokeObjectURL(url);
+  const response = await fetch("./res/fireshare-host-linux");
+  const buffer = await response.arrayBuffer();
+  const blob = new Blob([buffer], { type: "application/octet-stream" });
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "fireshare-host-linux";
+  link.click();
+
+  URL.revokeObjectURL(url);
 }

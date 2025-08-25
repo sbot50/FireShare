@@ -103,5 +103,15 @@
     "name": "R_DOWN",
     "label": "Right stick down",
     "value": 0
+  },
+  "axis_4": {
+    "name": "L_TRIGGER",
+    "label": "Left Trigger",
+    "value": 0
+  },
+  "axis_5": {
+    "name": "R_TRIGGER",
+    "label": "Right Trigger",
+    "value": 0
   }
 }
