@@ -48,6 +48,7 @@ async function showAlert() {
         option.textContent = name;
         document.querySelector("#config").insertBefore(option, document.querySelector("#config").lastElementChild);
         document.querySelector("#config").value = name;
+        configName = name;
     } else {
         document.querySelector("#config").value = configName;
     }
@@ -55,6 +56,7 @@ async function showAlert() {
 
 async function changeButton(button) {
     if (button.disabled) return;
+    if (clickedButton != null && button !== clickedButton) cancelBind();
     if (button === clickedButton) {
         clickedButton = null;
         const value = {
@@ -97,19 +99,24 @@ function loadConfig() {
 }
 
 function setButton(button, value) {
-    if (!value || !value.input.match(/^\${.*?}$/) && !value.advanced) {
+    const configData = {
+        input: value.input,
+        negative: value.negative,
+        advanced: value.advanced,
+    };
+    if (!value || (!value.input.match(/^\${.*?}$/) && !value.input.match(/^abs\(min\(0,\${.*?}\)\)$/) && !value.input.match(/^max\(0,\${.*?}\)$/) && !value.advanced)) {
         button.textContent = "Unbound";
         button.dataset.value = "0";
-    } else {
+    } else if (!value.advanced) {
         const splitKey = value.input
             .replace("${", "")
             .replace("}", "")
             .split("-");
-        const buttonKey = splitKey[splitKey.length - 1];
+        let buttonKey = splitKey[splitKey.length - 1];
         if (buttonKey.startsWith("btn") || buttonKey.startsWith("axis")) {
             const translated = translate.keyToButton(buttonKey);
             button.textContent = translated.label;
-            button.dataset.value = JSON.stringify(value);
+            button.dataset.value = value.input;
             if (buttonKey.startsWith("axis") && value.negative)
                 button.textContent = translated.label
                     .replace("Up", "Down")
@@ -117,13 +124,25 @@ function setButton(button, value) {
         } else if (buttonKey.startsWith("key")) {
             const keyText = buttonKey.replace("key_", "");
             button.textContent = keyText.charAt(0).toUpperCase() + keyText.slice(1).toLowerCase() + " Key";
-            button.dataset.value = JSON.stringify(value);
-        } else if (buttonKey.startsWith("mouse")) {
+            button.dataset.value = value.input;
+        } else if (value.input.startsWith(`abs(min(0,\${mouse`) || value.input.startsWith(`max(0,\${mouse`) || value.input.startsWith(`\${mouse_`)) {
+            value.input = removeFluff(value.input);
+            buttonKey = removeFluff(buttonKey);
             const keyText = buttonKey.replace("mouse_", "");
             button.textContent = "Mouse " + keyText.charAt(0).toUpperCase() + keyText.slice(1).toLowerCase();
-            button.dataset.value = JSON.stringify(value);
+            if (buttonKey.includes("mouse_x") || buttonKey.includes("mouse_y")) button.textContent += value.negative ? "-" : "+";
+            button.dataset.value = (value.negative) ? "abs(min(0," + value.input + "))" : "max(0," + value.input + ")";
         }
     }
+    if (configName !== "Default") {
+        configData.input = button.dataset.value;
+        config[button.dataset.key] = configData;
+        localStorage.setItem("config_" + configName, JSON.stringify(config));
+    }
+}
+
+function removeFluff(input) {
+    return input.replace("abs(min(0,", "").replace("))", "").replace("max(0,", "").replace(")", "");
 }
 
 function keyPressed(event) {
@@ -155,10 +174,12 @@ function mouseMoved(event) {
         advanced: false,
     }
     if (x_movement > 0.2) {
+        value.negative = x < mouse_x;
         value.input = `\${mouse_x}`;
         setButton(clickedButton, value);
         clickedButton = null;
     } else if (y_movement > 0.2) {
+        value.negative = y < mouse_y;
         value.input = `\${mouse_y}`;
         setButton(clickedButton, value);
         clickedButton = null;
