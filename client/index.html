@@ -3,27 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FireShare - Client</title>
-    <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-    <!-- <script src="https://cdn.jsdelivr.net/npm/mathjs@9.4.4/lib/browser/math.min.js"></script> -->
-    <script src="./scripts/index.js" type="module"></script>
+    <title>Client</title>
+    <script src="../res/libraries/peerjs.min.js"></script>
+    <script src="../res/libraries/math.min.js"></script>
+
+    <!--  Init  -->
+    <script src="scripts/init/hover.js"></script>
+    <script src="scripts/init/controller.js"></script>
+
+    <!--  Load  -->
+    <script type="module" src="scripts/load/config.js"></script>
+
     <link rel="stylesheet" href="./style.css">
 </head>
 <body>
-    <div id="body" class="container verticle">
-        <div id="settings" class="container verticle center">
-            <h2 id="title">Nickname</h2><br>
+    <div id="body" class="container vertical">
+        <div id="settings" class="container vertical center">
+            <label for="nickname" class="label">Nickname</label><br>
             <input type="text" id="nickname" placeholder="Anonymous">
+            <label for="config" class="label">Config</label><br>
             <div class="container">
                 <select name="configs" id="config">
                     <option value="Default">Default</option>
                     <option value="New">New</option>
                 </select>
-                <button id="rename" class="imageButton"><image src="res/rename.svg"></image></button>
-                <button id="import_new" class="imageButton"><image src="res/import as new.svg"></image></button>
-                <button id="import" class="imageButton"><image src="res/import.svg"></image></button>
-                <button id="export" class="imageButton"><image src="res/export.svg"></image></button>
-                <button id="delete" class="imageButton"><image src="res/delete.svg"></image></button>
+                <button id="rename" class="imageButton hover" data-hover-text="Rename"><img src="../res/images/rename.svg" alt="Rename"></button>
+                <button id="import_new" class="imageButton hover" data-hover-text="Import as..."><img src="../res/images/import as new.svg" alt="Import as..."></button>
+                <button id="import" class="imageButton hover" data-hover-text="Import"><img src="../res/images/import.svg" alt="Import"></button>
+                <button id="export" class="imageButton hover" data-hover-text="Export"><img src="../res/images/export.svg" alt="Export"></button>
+                <button id="delete" class="imageButton hover" data-hover-text="Delete"><img src="../res/images/delete.svg" alt="Delete"></button>
             </div>
         </div>
         <div class="gridContainer fullWidth fullHeight" id="controlCont">
@@ -33,7 +41,7 @@
         <button id="connect">Connect</button>
     </div>
     <div class="sidebar">
-        <img src="./res/arrow.svg" alt="">
+        <img src="../res/images/arrow.svg" alt="">
         <div class="main">
             <div class="keyboard">
                 <p class="title">Keyboard</p>
@@ -49,5 +57,6 @@
     <div id="streamContainer">
         <video id="remoteVideo" autoplay></video>
     </div>
+    <div id="hover"></div>
 </body>
 </html>

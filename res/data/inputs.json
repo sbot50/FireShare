@@ -1,0 +1,122 @@
+{
+  "a": {
+    "label": "A",
+    "internal": "a",
+    "class": "button_a"
+  },
+  "b": {
+    "label": "B",
+    "internal": "b",
+    "class": "button_b"
+  },
+  "x": {
+    "label": "X",
+    "internal": "x",
+    "class": "button_x"
+  },
+  "y": {
+    "label": "Y",
+    "internal": "y",
+    "class": "button_y"
+  },
+  "l1": {
+    "label": "Left Bumper",
+    "internal": "l1",
+    "class": "left_shoulder"
+  },
+  "l3": {
+    "label": "Left Stick",
+    "internal": "l3",
+    "class": "left_stick"
+  },
+  "r1": {
+    "label": "Right Bumper",
+    "internal": "r1",
+    "class": "right_shoulder"
+  },
+  "r3": {
+    "label": "Right Stick",
+    "internal": "r3",
+    "class": "right_stick"
+  },
+  "up": {
+    "label": "Up",
+    "internal": "up",
+    "class": "button_up"
+  },
+  "down": {
+    "label": "Down",
+    "internal": "down",
+    "class": "button_down"
+  },
+  "left": {
+    "label": "Left",
+    "internal": "left",
+    "class": "button_left"
+  },
+  "right": {
+    "label": "Right",
+    "internal": "right",
+    "class": "button_right"
+  },
+  "minus": {
+    "label": "Select",
+    "internal": "minus",
+    "class": "button_minus"
+  },
+  "plus": {
+    "label": "Start",
+    "internal": "plus",
+    "class": "button_plus"
+  },
+  "left_up": {
+    "label": "Left Stick Up",
+    "internal": "left_up",
+    "class": "left_stick"
+  },
+  "left_down": {
+    "label": "Left Stick Down",
+    "internal": "left_down",
+    "class": "left_stick"
+  },
+  "left_left": {
+    "label": "Left Stick Left",
+    "internal": "left_left",
+    "class": "left_stick"
+  },
+  "left_right": {
+    "label": "Left Stick Right",
+    "internal": "left_right",
+    "class": "left_stick"
+  },
+  "left_trigger": {
+    "label": "Left Trigger",
+    "internal": "left_trigger",
+    "class": "left_trigger"
+  },
+  "right_up": {
+    "label": "Right Stick Up",
+    "internal": "right_up",
+    "class": "right_stick"
+  },
+  "right_down": {
+    "label": "Right Stick Down",
+    "internal": "right_down",
+    "class": "right_stick"
+  },
+  "right_left": {
+    "label": "Right Stick Left",
+    "internal": "right_left",
+    "class": "right_stick"
+  },
+  "right_right": {
+    "label": "Right Stick Right",
+    "internal": "right_right",
+    "class": "right_stick"
+  },
+  "right_trigger": {
+    "label": "Right Trigger",
+    "internal": "right_trigger",
+    "class": "right_trigger"
+  }
+}

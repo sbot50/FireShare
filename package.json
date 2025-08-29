@@ -2,14 +2,10 @@
   "name": "fireshare",
   "version": "1.0.0",
   "main": "index.mjs",
-  "repository": {
-    "type": "git",
-    "url": "https://forgejo.tail12316.ts.net/username/FireShare.git"
-  },
-  "author": "",
+  "author": "sbot50",
   "license": "ISC",
-  "description": "",
+  "description": "Website that allows people to play local multiplayer games from anywhere in the world.",
   "dependencies": {
-    "express": "^5.1.0"
+    "express": "latest"
   }
 }

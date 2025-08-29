@@ -1,0 +1,22 @@
+{
+  "btn_0": "a",
+  "btn_1": "b",
+  "btn_2": "x",
+  "btn_3": "y",
+  "btn_4": "l1",
+  "btn_5": "r1",
+  "btn_6": "left_trigger",
+  "btn_7": "right_trigger",
+  "btn_8": "minus",
+  "btn_9": "plus",
+  "btn_10": "l3",
+  "btn_11": "r3",
+  "btn_12": "up",
+  "btn_13": "down",
+  "btn_14": "left",
+  "btn_15": "right",
+  "axis_0": "left_up",
+  "axis_1": "left_left",
+  "axis_2": "right_up",
+  "axis_3": "right_left"
+}

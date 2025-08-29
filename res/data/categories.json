@@ -1,0 +1,61 @@
+{
+  "Menu Buttons": {
+    "section": 1,
+    "buttons": [
+      "plus",
+      "minus"
+    ]
+  },
+  "Left Triggers": {
+    "section": 3,
+    "buttons": [
+      "l1",
+      "left_trigger",
+      "l3"
+    ]
+  },
+  "D-pad": {
+    "section": 4,
+    "buttons": [
+      "up",
+      "down",
+      "left",
+      "right"
+    ]
+  },
+  "Right Triggers": {
+    "section": 5,
+    "buttons": [
+      "r1",
+      "right_trigger",
+      "r3"
+    ]
+  },
+  "Left Stick": {
+    "section": 6,
+    "buttons": [
+      "left_up",
+      "left_down",
+      "left_left",
+      "left_right"
+    ]
+  },
+  "Face Buttons": {
+    "section": 7,
+    "buttons": [
+      "a",
+      "b",
+      "x",
+      "y"
+    ]
+  },
+  "Right Stick": {
+    "section": 8,
+    "buttons": [
+      "right_up",
+      "right_down",
+      "right_left",
+      "right_right"
+    ]
+  }
+}

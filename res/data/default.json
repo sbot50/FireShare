@@ -1,0 +1,122 @@
+{
+  "a": {
+    "input":    "${ctrl_0-btn_0}",
+    "negative": false,
+    "advanced": false
+  },
+  "b": {
+    "input":    "${ctrl_0-btn_1}",
+    "negative": false,
+    "advanced": false
+  },
+  "x": {
+    "input":    "${ctrl_0-btn_2}",
+    "negative": false,
+    "advanced": false
+  },
+  "y": {
+    "input":    "${ctrl_0-btn_3}",
+    "negative": false,
+    "advanced": false
+  },
+  "l1": {
+    "input":    "${ctrl_0-btn_4}",
+    "negative": false,
+    "advanced": false
+  },
+  "r1": {
+    "input":    "${ctrl_0-btn_5}",
+    "negative": false,
+    "advanced": false
+  },
+  "minus": {
+    "input":    "${ctrl_0-btn_8}",
+    "negative": false,
+    "advanced": false
+  },
+  "plus": {
+    "input":    "${ctrl_0-btn_9}",
+    "negative": false,
+    "advanced": false
+  },
+  "l3": {
+    "input":    "${ctrl_0-btn_10}",
+    "negative": false,
+    "advanced": false
+  },
+  "r3": {
+    "input":    "${ctrl_0-btn_11}",
+    "negative": false,
+    "advanced": false
+  },
+  "up": {
+    "input":    "${ctrl_0-btn_12}",
+    "negative": false,
+    "advanced": false
+  },
+  "down": {
+    "input":    "${ctrl_0-btn_13}",
+    "negative": false,
+    "advanced": false
+  },
+  "left": {
+    "input":    "${ctrl_0-btn_14}",
+    "negative": false,
+    "advanced": false
+  },
+  "right": {
+    "input":    "${ctrl_0-btn_15}",
+    "negative": false,
+    "advanced": false
+  },
+  "left_up": {
+    "input":    "${ctrl_0-axis_0}",
+    "negative": false,
+    "advanced": false
+  },
+  "left_down": {
+    "input":    "${ctrl_0-axis_0}",
+    "negative": true,
+    "advanced": false
+  },
+  "left_left": {
+    "input":    "${ctrl_0-axis_1}",
+    "negative": false,
+    "advanced": false
+  },
+  "left_right": {
+    "input":    "${ctrl_0-axis_1}",
+    "negative": true,
+    "advanced": false
+  },
+  "left_trigger": {
+    "input":    "${ctrl_0-btn_6}",
+    "negative": false,
+    "advanced": false
+  },
+  "right_up": {
+    "input":    "${ctrl_0-axis_2}",
+    "negative": false,
+    "advanced": false
+  },
+  "right_down": {
+    "input":    "${ctrl_0-axis_2}",
+    "negative": true,
+    "advanced": false
+  },
+  "right_left": {
+    "input":    "${ctrl_0-axis_3}",
+    "negative": false,
+    "advanced": false
+  },
+  "right_right": {
+    "input":    "${ctrl_0-axis_3}",
+    "negative": true,
+    "advanced": false
+  },
+  "right_trigger": {
+    "input":    "${ctrl_0-btn_7}",
+    "negative": false,
+    "advanced": false
+  }
+}
