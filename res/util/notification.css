@@ -138,6 +138,10 @@
     transition: transform 0.25s ease, opacity 0.25s ease;
     isolation: isolate;
 
+    &:hover .timeout {
+        animation-play-state: paused;
+    }
+
     .col {
         display: flex;
         flex-direction: column;
