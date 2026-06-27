@@ -42,7 +42,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (stream) {
         document.getElementById("placeholder-text").style.display = "none";
         startButton.style.display = "block";
-        startButton.addEventListener("click", () => getStream(peer, websocket));
+        if (audio) {
+            startButton.textContent = "Select Audio";
+            startButton.addEventListener("click", () => selectAudio(peer, websocket));
+        } else {
+            startButton.addEventListener("click", () => getStream(peer));
+        }
     }
 
     initializeStreaming(peer, websocket);
@@ -54,14 +59,40 @@ function copyId(id) {
     notif.show();
 }
 
-async function getStream(peer, websocket) {
+async function selectAudio(peer, websocket) {
     try {
-        if (audio) {
-            websocket.send(JSON.stringify({
-                rtype: "get_audio"
-            }));
-        }
+        let audioStream = await navigator.mediaDevices.getUserMedia({
+            audio: {
+                autoGainControl: false,
+                channelCount: 2,
+                echoCancellation: false,
+                latency: 0,
+                noiseSuppression: false,
+                sampleRate: 48000,
+                sampleSize: 16,
+                volume: 1.0,
+            },
+        });
+        audioTracks = audioStream.getAudioTracks();
+        websocket.send(JSON.stringify({
+            rtype: "get_audio"
+        }));
+        const startButton = document.getElementById("start-stream");
+        const newStartButton = startButton.cloneNode(true);
+        startButton.parentNode.replaceChild(newStartButton, startButton);
 
+
+        newStartButton.textContent = "Start Streaming";
+        newStartButton.addEventListener("click", () => getStream(peer));
+    } catch (error) {
+        console.error("Error accessing media devices:", error);
+        const notif = new Notification("Couldn't access audio", NotifType.ERROR, 5, NotifPlacement.TOP_MIDDLE);
+        notif.show();
+    }
+}
+
+async function getStream(peer) {
+    try {
         const videoConstraints = {
             displaySurface: "monitor"
         };
@@ -75,8 +106,6 @@ async function getStream(peer, websocket) {
         const constraints = {
             video: videoConstraints,
             audio: false,
-            // systemAudio: "include",
-            // windowAudio: "include"
         };
 
         hostStream = await navigator.mediaDevices.getDisplayMedia(constraints);

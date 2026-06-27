@@ -12,6 +12,18 @@ let pageLoadTime = Date.now();
 
 document.querySelector("#disconnect").addEventListener("click", () => disconnect());
 
+document.getElementById('unmuteBtn').addEventListener('click', () => {
+    const video = document.getElementById('localStream');
+
+    // Unmute the video element
+    video.muted = false;
+
+    // Optional: Hide the unmute button once clicked
+    document.getElementById('unmuteBtn').style.display = 'none';
+
+    console.log("Video unmuted. Current volume:", video.volume);
+});
+
 async function disconnect() {
     remote.send({
         rtype: "disconnect"
