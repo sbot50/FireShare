@@ -12,6 +12,15 @@ let pageLoadTime = Date.now();
 
 document.querySelector("#disconnect").addEventListener("click", () => disconnect());
 
+document.getElementById('watch').addEventListener('click', () => {
+    const video = document.getElementById('localStream');
+    video.style.display = "block";
+    video.muted = false;
+    video.play();
+    document.querySelector(".stream-placeholder").style.display = "none";
+    console.log("Video unmuted. Current volume:", video.volume);
+});
+
 async function disconnect() {
     remote.send({
         rtype: "disconnect"
@@ -49,8 +58,7 @@ function handleIncomingCall(call) {
     call.on("stream", (stream) => {
         const videoElement = document.getElementById("localStream");
         videoElement.srcObject = stream;
-        videoElement.style.display = "block";
-        document.querySelector(".stream-placeholder").style.display = "none";
+        document.querySelector("#watch").hidden = false;
     });
     call.on("error", (err) => {
         console.error("Call error:", err);

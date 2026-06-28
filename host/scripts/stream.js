@@ -27,7 +27,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("copy").addEventListener("click", () => copyId(id));
 
     let websocket = new WebSocket("ws://127.0.0.1:6731");
+    websocket.onmessage = (msg) => {
+        console.log(msg);
+    }
     websocket.onerror = errorNotif;
+    websocket.onclose = closeNotif;
 
     const peer = new Peer("netshare-" + id);
 
@@ -38,7 +42,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (stream) {
         document.getElementById("placeholder-text").style.display = "none";
         startButton.style.display = "block";
-        startButton.addEventListener("click", () => getStream(peer));
+        if (audio) {
+            startButton.textContent = "Select Audio";
+            startButton.addEventListener("click", () => selectAudio(peer, websocket));
+        } else {
+            startButton.addEventListener("click", () => getStream(peer));
+        }
     }
 
     initializeStreaming(peer, websocket);
@@ -50,24 +59,40 @@ function copyId(id) {
     notif.show();
 }
 
+async function selectAudio(peer, websocket) {
+    try {
+        let audioStream = await navigator.mediaDevices.getUserMedia({
+            audio: {
+                autoGainControl: false,
+                channelCount: 2,
+                echoCancellation: false,
+                latency: 0,
+                noiseSuppression: false,
+                sampleRate: 48000,
+                sampleSize: 16,
+                volume: 1.0,
+            },
+        });
+        audioTracks = audioStream.getAudioTracks();
+        websocket.send(JSON.stringify({
+            rtype: "get_audio"
+        }));
+        const startButton = document.getElementById("start-stream");
+        const newStartButton = startButton.cloneNode(true);
+        startButton.parentNode.replaceChild(newStartButton, startButton);
+
+
+        newStartButton.textContent = "Start Streaming";
+        newStartButton.addEventListener("click", () => getStream(peer));
+    } catch (error) {
+        console.error("Error accessing media devices:", error);
+        const notif = new Notification("Couldn't access audio", NotifType.ERROR, 5, NotifPlacement.TOP_MIDDLE);
+        notif.show();
+    }
+}
+
 async function getStream(peer) {
     try {
-        if (audio) {
-            let audioStream = await navigator.mediaDevices.getUserMedia({
-                audio: {
-                    autoGainControl: false,
-                    channelCount: 2,
-                    echoCancellation: false,
-                    latency: 0,
-                    noiseSuppression: false,
-                    sampleRate: 48000,
-                    sampleSize: 16,
-                    volume: 1.0,
-                },
-            });
-            audioTracks = audioStream.getAudioTracks();
-        }
-
         const videoConstraints = {
             displaySurface: "monitor"
         };
@@ -80,9 +105,7 @@ async function getStream(peer) {
         }
         const constraints = {
             video: videoConstraints,
-            audio: true,
-            // systemAudio: "include",
-            // windowAudio: "include"
+            audio: false,
         };
 
         hostStream = await navigator.mediaDevices.getDisplayMedia(constraints);
@@ -98,7 +121,7 @@ async function getStream(peer) {
         await sendStream(peer);
     } catch (error) {
         console.error("Error accessing media devices:", error);
-        const notif = new Notification("Couldn't access camera", NotifType.ERROR, 5, NotifPlacement.TOP_MIDDLE);
+        const notif = new Notification("Couldn't access display", NotifType.ERROR, 5, NotifPlacement.TOP_MIDDLE);
         notif.show();
     }
 }
@@ -112,6 +135,11 @@ async function sendStream(peer) {
 
 function errorNotif() {
     const notif = new Notification("Couldn't connect to host script", NotifType.ERROR, 5, NotifPlacement.TOP_MIDDLE);
+    notif.show();
+}
+
+function closeNotif() {
+    const notif = new Notification("Host script disconnected", NotifType.ERROR, 5, NotifPlacement.TOP_MIDDLE);
     notif.show();
 }
 
@@ -158,6 +186,7 @@ function handleClientData(peer, websocket, client, data) {
     if (data.rtype === "connect" || data.rtype === "disconnect" || data.rtype === "controls") {
         data.id = client.label;
         data.nickname = data.nickname || "Anonymous";
+        console.log(data);
         websocket.send(JSON.stringify(data));
     }
 }
