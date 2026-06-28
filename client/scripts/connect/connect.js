@@ -12,15 +12,12 @@ let pageLoadTime = Date.now();
 
 document.querySelector("#disconnect").addEventListener("click", () => disconnect());
 
-document.getElementById('unmuteBtn').addEventListener('click', () => {
+document.getElementById('watch').addEventListener('click', () => {
     const video = document.getElementById('localStream');
-
-    // Unmute the video element
+    video.style.display = "block";
     video.muted = false;
-
-    // Optional: Hide the unmute button once clicked
-    document.getElementById('unmuteBtn').style.display = 'none';
-
+    video.play();
+    document.querySelector(".stream-placeholder").style.display = "none";
     console.log("Video unmuted. Current volume:", video.volume);
 });
 
@@ -61,8 +58,7 @@ function handleIncomingCall(call) {
     call.on("stream", (stream) => {
         const videoElement = document.getElementById("localStream");
         videoElement.srcObject = stream;
-        videoElement.style.display = "block";
-        document.querySelector(".stream-placeholder").style.display = "none";
+        document.querySelector("#watch").hidden = false;
     });
     call.on("error", (err) => {
         console.error("Call error:", err);

@@ -192,3 +192,29 @@ body {
         transition: all 0.2s;
     }
 }
+
+.watch-button {
+    padding: 12px 28px;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 10px;
+}
+
+.watch-button:hover {
+    background: #5568d3;
+    transform: translateY(-2px);
+}
+
+.watch-button:active {
+    transform: translateY(0);
+}
+
+#localStream {
+    display: none;
+}
